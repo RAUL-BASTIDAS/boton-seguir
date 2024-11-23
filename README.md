@@ -3,6 +3,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seguir a Jhon Molina Putumayo</title>
     <style>
         .fb-button {
@@ -84,15 +85,94 @@
         .reset-button:hover {
             background-color: #e4e6eb;
         }
+
+        /* Agregamos estilos para la ventana emergente */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1001;
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+
+        .popup-content {
+            text-align: center;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .popup-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .confirm-button {
+            background-color: #1877f2;
+            color: white;
+        }
+
+        .cancel-button {
+            background-color: #e4e6eb;
+            color: #1c1e21;
+        }
     </style>
 </head>
 <body>
     <div id="mensajeEstado" class="mensaje"></div>
     
-    <button id="fbFollowBtn" class="fb-button">
-        <i class="fb-icon">f</i>
-        <span>Seguir a Jhon Molina</span>
-    </button>
+    <!-- Ventana emergente -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="followPopup">
+        <div class="popup-content">
+            <h3>Seguir a Jhon Molina Putumayo</h3>
+            <p>¿Deseas seguir esta página en Facebook?</p>
+            <div class="popup-buttons">
+                <button class="popup-button confirm-button" id="confirmFollow">Seguir</button>
+                <button class="popup-button cancel-button" id="cancelFollow">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones flotantes -->
+    <div class="floating-container">
+        <button id="fbFollowBtn" class="fb-button">
+            <i class="fb-icon">f</i>
+            <span>Seguir a Jhon Molina</span>
+        </button>
+
+        <button id="whatsappBtn" class="whatsapp-button">
+            <span class="whatsapp-icon">
+                <!-- ... ícono de WhatsApp ... -->
+            </span>
+            <span>Compartir</span>
+        </button>
+    </div>
 
     <button id="resetBtn" class="reset-button" style="display: none;">
         Reiniciar estado
@@ -101,6 +181,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const fbButton = document.getElementById('fbFollowBtn');
+            const whatsappBtn = document.getElementById('whatsappBtn');
+            const popup = document.getElementById('followPopup');
+            const overlay = document.getElementById('overlay');
             const mensajeEstado = document.getElementById('mensajeEstado');
             const resetBtn = document.getElementById('resetBtn');
             const PAGINA_FB = 'https://www.facebook.com/JhonMolinaPutumayo';
@@ -128,9 +211,8 @@
             // Manejar click en el botón de seguir
             fbButton.addEventListener('click', function() {
                 if (!yaSiguiendo) {
-                    window.open(PAGINA_FB, '_blank');
-                    localStorage.setItem('siguiendoJhonMolina', 'true');
-                    actualizarEstado(true);
+                    popup.style.display = 'block';
+                    overlay.style.display = 'block';
                 }
             });
 
@@ -138,6 +220,21 @@
             resetBtn.addEventListener('click', function() {
                 localStorage.removeItem('siguiendoJhonMolina');
                 actualizarEstado(false);
+            });
+
+            // Manejar click en el botón de confirmar seguir
+            document.getElementById('confirmFollow').addEventListener('click', function() {
+                window.open(PAGINA_FB, '_blank');
+                localStorage.setItem('siguiendoJhonMolina', 'true');
+                actualizarEstado(true);
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
+            });
+
+            // Manejar click en el botón de cancelar seguir
+            document.getElementById('cancelFollow').addEventListener('click', function() {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
             });
         });
     </script>
