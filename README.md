@@ -3,128 +3,143 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Meta tags para compartir -->
-    <meta property="og:title" content="Seguir a Jhon Molina Putumayo">
-    <meta property="og:description" content="¡Haz click para seguir la página de Jhon Molina Putumayo en Facebook!">
-    <meta property="og:image" content="https://TU_URL/preview.jpg">
-    <meta property="og:url" content="https://TU_URL">
     <title>Seguir a Jhon Molina Putumayo</title>
-    
-    <!-- Aquí va todo el código CSS anterior -->
-    
     <style>
-        /* Agregar estilos para botones de compartir */
-        .share-container {
-            margin-top: 30px;
+        .fb-button {
+            background-color: #1877f2;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            padding: 12px 24px;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform-style: preserve-3d;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #0d5ab9;
+            margin: 20px;
+        }
+
+        .fb-button.disabled {
+            background-color: #666;
+            box-shadow: 0 4px 0 #444;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .fb-button:not(.disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #0d5ab9;
+        }
+
+        .fb-icon {
+            background-color: white;
+            color: #1877f2;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-style: normal;
+            font-weight: bold;
+        }
+
+        .mensaje {
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            font-family: Helvetica, Arial, sans-serif;
+            color: #1877f2;
             text-align: center;
         }
-        
-        .share-title {
-            font-family: Helvetica, Arial, sans-serif;
-            color: #666;
-            margin-bottom: 15px;
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
         }
-        
-        /* Aquí van los estilos de share-buttons definidos arriba */
+
+        .reset-button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #f0f2f5;
+            color: #666;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .reset-button:hover {
+            background-color: #e4e6eb;
+        }
     </style>
 </head>
 <body>
-    <!-- Botones anteriores -->
     <div id="mensajeEstado" class="mensaje"></div>
-    <div class="buttons-container">
-        <!-- ... botones anteriores ... -->
-    </div>
+    
+    <button id="fbFollowBtn" class="fb-button">
+        <i class="fb-icon">f</i>
+        <span>Seguir a Jhon Molina</span>
+    </button>
 
-    <!-- Nueva sección de compartir -->
-    <div class="share-container">
-        <h3 class="share-title">Comparte este botón:</h3>
-        <div class="share-buttons">
-            <!-- ... botones de compartir ... -->
-        </div>
-    </div>
+    <button id="resetBtn" class="reset-button" style="display: none;">
+        Reiniciar estado
+    </button>
 
-    <!-- Scripts anteriores más las funciones de compartir -->
     <script>
-        // ... código anterior ...
-        
-        // Agregar las funciones de compartir definidas arriba
+        document.addEventListener('DOMContentLoaded', function() {
+            const fbButton = document.getElementById('fbFollowBtn');
+            const mensajeEstado = document.getElementById('mensajeEstado');
+            const resetBtn = document.getElementById('resetBtn');
+            const PAGINA_FB = 'https://www.facebook.com/JhonMolinaPutumayo';
+
+            // Verificar si ya sigue la página
+            const yaSiguiendo = localStorage.getItem('siguiendoJhonMolina');
+
+            function actualizarEstado(siguiendo) {
+                if (siguiendo) {
+                    fbButton.classList.add('disabled');
+                    fbButton.innerHTML = '<i class="fb-icon">f</i><span>Ya sigues esta página</span>';
+                    mensajeEstado.textContent = '¡Ya estás siguiendo a Jhon Molina Putumayo!';
+                    resetBtn.style.display = 'block';
+                } else {
+                    fbButton.classList.remove('disabled');
+                    fbButton.innerHTML = '<i class="fb-icon">f</i><span>Seguir a Jhon Molina</span>';
+                    mensajeEstado.textContent = 'Click para seguir a Jhon Molina Putumayo';
+                    resetBtn.style.display = 'none';
+                }
+            }
+
+            // Establecer estado inicial
+            actualizarEstado(yaSiguiendo);
+
+            // Manejar click en el botón de seguir
+            fbButton.addEventListener('click', function() {
+                if (!yaSiguiendo) {
+                    window.open(PAGINA_FB, '_blank');
+                    localStorage.setItem('siguiendoJhonMolina', 'true');
+                    actualizarEstado(true);
+                }
+            });
+
+            // Botón para reiniciar estado (para pruebas)
+            resetBtn.addEventListener('click', function() {
+                localStorage.removeItem('siguiendoJhonMolina');
+                actualizarEstado(false);
+            });
+        });
     </script>
 </body>
-</html>
-<div class="share-buttons">
-    <!-- Botón de Facebook -->
-    <a href="#" onclick="shareOnFacebook()" class="share-button facebook">
-        Compartir en Facebook
-    </a>
-
-    <!-- Botón de Twitter -->
-    <a href="#" onclick="shareOnTwitter()" class="share-button twitter">
-        Compartir en Twitter
-    </a>
-
-    <!-- Botón de WhatsApp -->
-    <a href="#" onclick="shareOnWhatsApp()" class="share-button whatsapp">
-        Compartir en WhatsApp
-    </a>
-</div>
-
-<style>
-.share-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.share-button {
-    padding: 10px 20px;
-    border-radius: 6px;
-    color: white;
-    text-decoration: none;
-    font-family: Helvetica, Arial, sans-serif;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-}
-
-.facebook {
-    background-color: #1877f2;
-}
-
-.twitter {
-    background-color: #1da1f2;
-}
-
-.whatsapp {
-    background-color: #25D366;
-}
-</style>
-
-<script>
-// Función para compartir en Facebook
-function shareOnFacebook() {
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-}
-
-// Función para compartir en Twitter
-function shareOnTwitter() {
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('¡Sigue a Jhon Molina Putumayo en Facebook!');
-    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
-}
-
-// Función para compartir en WhatsApp
-function shareOnWhatsApp() {
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('¡Hola! Te invito a seguir la página de Jhon Molina Putumayo: ');
-    const fullMessage = `${text}${url}`;
-    
-    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        window.open(`whatsapp://send?text=${fullMessage}`);
-    } else {
-        window.open(`https://web.whatsapp.com/send?text=${fullMessage}`);
-    }
-}
-</script>
+</html> 
